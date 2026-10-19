@@ -283,6 +283,14 @@ namespace GraphInterface
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Control)
+            {
+                if (!textBoxExpression.Focused && !textBoxResult.Focused)
+                    textBoxExpression.Focus();
+                nonNumberEntered = false;
+                return;
+            }
+
             // Initialize the flag to false.
             textBoxExpression.Focus();
             nonNumberEntered = false;
@@ -328,32 +336,41 @@ namespace GraphInterface
                     e.KeyCode != Keys.OemCloseBrackets &&
                     e.KeyCode != Keys.Add &&
                     e.KeyCode != Keys.Oem102 &&
-                     e.KeyCode != Keys.Oem4 &&
-                     e.KeyCode != Keys.Oem5 &&
-                     e.KeyCode != Keys.OemQuestion
+                    e.KeyCode != Keys.Oem4 &&
+                    e.KeyCode != Keys.Oem5 &&
+                    e.KeyCode != Keys.OemQuestion &&
+                    e.KeyCode != Keys.P &&      
+                    e.KeyCode != Keys.M &&      
+                    e.KeyCode != Keys.Left &&   
+                    e.KeyCode != Keys.Right &&
+                    e.KeyCode != Keys.Delete &&
+                    e.KeyCode != Keys.Home &&
+                    e.KeyCode != Keys.End
                     )
                     {
-                        // A non-numerical keystroke was pressed.
-                        // Set the flag to true and evaluate in KeyPress event.
                         nonNumberEntered = true;
                     }
                     else nonNumberEntered = false;
                 }
             }
         }
-        private void textBoxResult_TextChanged(object sender, EventArgs e)
-        {
-            result = textBoxResult.Text;
-        }
+
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Check for the flag being set in the KeyDown event.
             if (nonNumberEntered == true)
             {
-                // Stop the character from being entered into the control since it is non-numerical.
                 e.Handled = true;
+                return;
             }
+            if (char.IsLetter(e.KeyChar) && e.KeyChar != 'p' && e.KeyChar != 'm')
+                e.Handled = true;
         }
+        private void textBoxResult_TextChanged(object sender, EventArgs e)
+        {
+            result = textBoxResult.Text;
+        }
+       
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (timercount < 3)
